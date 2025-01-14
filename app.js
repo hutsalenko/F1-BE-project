@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -9,6 +8,9 @@ const MONGODB_URI =
     'mongodb+srv://ivangutsalenko92:70biPAYmrs24HVGz@cluster0.bsq4a.mongodb.net/formula1?retryWrites=true&w=majority&appName=Cluster0';
 
 const driverRoutes = require('./routes/drivers');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(cors({ origin: ['http://localhost:3000'] }));
 
