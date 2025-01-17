@@ -1,4 +1,5 @@
 const Driver = require('../models/driver');
+const User = require('../models/user');
 
 exports.getDrivers = async (req, res, next) => {
     try {
@@ -14,20 +15,27 @@ exports.getDrivers = async (req, res, next) => {
 exports.postDrivers = async (req, res, next) => {
     const { driverId, permanentNumber, code, url, givenName, familyName, dateOfBirth, nationality } = req.body;
 
-    const driver = new Driver({
-        driverId,
-        permanentNumber,
-        code,
-        url,
-        givenName,
-        familyName,
-        dateOfBirth,
-        nationality,
-    });
-
     try {
+        const user = await User.findOne({ email: req.params.email });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const driver = new Driver({
+            driverId,
+            permanentNumber,
+            code,
+            url,
+            givenName,
+            familyName,
+            dateOfBirth,
+            nationality,
+            userId: user._id,
+        });
+
         await driver.save();
-        res.status(201).json({ message: 'Successfully added!' });
+        res.status(201).json({ message: 'Driver added successfully!' });
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;
