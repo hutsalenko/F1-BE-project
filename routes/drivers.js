@@ -4,7 +4,7 @@ const driversController = require('../controllers/drivers');
 
 const router = express.Router();
 
-router.get('/drivers', driversController.getDrivers);
+router.get('/drivers/:userId', driversController.getDrivers);
 router.post('/drivers/:email', driversController.postDrivers);
 router.delete('/drivers/:driverId', driversController.deleteDrivers);
 

@@ -1,9 +1,10 @@
+const mongoose = require('mongoose');
 const Driver = require('../models/driver');
 const User = require('../models/user');
 
 exports.getDrivers = async (req, res, next) => {
     try {
-        const allDrivers = await Driver.find();
+        const allDrivers = await Driver.find({ userId: new mongoose.Types.ObjectId(req.params.userId) });
         res.status(200).json({ drivers: allDrivers });
     } catch (err) {
         const error = new Error(err);
