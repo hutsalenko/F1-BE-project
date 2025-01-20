@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 
 exports.postUser = async (req, res, next) => {
@@ -23,6 +24,17 @@ exports.getUser = async (req, res, next) => {
     try {
         const allUsers = await User.find();
         res.status(200).json({ users: allUsers });
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    }
+};
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        await User.findOneAndDelete({ _id: new mongoose.Types.ObjectId(req.params.userId) });
+        res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;
