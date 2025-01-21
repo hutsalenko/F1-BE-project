@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+const { ObjectId } = require('mongoose').Types;
 const User = require('../models/user');
+const Driver = require('../models/driver');
 
 exports.postUser = async (req, res, next) => {
     const { email, firstName, lastName } = req.body;
@@ -11,8 +12,8 @@ exports.postUser = async (req, res, next) => {
     });
 
     try {
-        await user.save();
-        res.status(201).json({ message: 'Successfully created user!' });
+        const newUser = await user.save();
+        res.status(201).json({ message: 'Successfully created user!', data: newUser });
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;
@@ -32,8 +33,11 @@ exports.getUser = async (req, res, next) => {
 };
 
 exports.deleteUser = async (req, res, next) => {
+    const selectedUser = ObjectId.createFromHexString(req.params.userId);
+
     try {
-        await User.findOneAndDelete({ _id: new mongoose.Types.ObjectId(req.params.userId) });
+        await User.findOneAndDelete({ _id: selectedUser });
+        await Driver.deleteMany({ userId: selectedUser });
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
         const error = new Error(err);
