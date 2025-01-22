@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     email: String,
     firstName: String,
     lastName: String,
+    password: String,
     drivers: [
         {
             type: mongoose.Schema.Types.ObjectId,
