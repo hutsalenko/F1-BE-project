@@ -35,7 +35,11 @@ exports.postDrivers = async (req, res, next) => {
             userId: user._id,
         });
 
-        await driver.save();
+        const newDriver = await driver.save();
+
+        user.drivers.push(newDriver);
+        await user.save();
+
         res.status(201).json({ message: 'Driver added successfully!' });
     } catch (err) {
         const error = new Error(err);

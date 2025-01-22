@@ -4,6 +4,12 @@ const userSchema = new mongoose.Schema({
     email: String,
     firstName: String,
     lastName: String,
+    drivers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Driver',
+        },
+    ],
 });
 
 module.exports = mongoose.model('User', userSchema);
