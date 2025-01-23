@@ -1,11 +1,10 @@
-// const express = require('express');
+const express = require('express');
 
-// const driversController = require('../controllers/drivers');
+const authController = require('../controllers/auth');
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/drivers/:userId', driversController.getDrivers);
-// router.post('/drivers/:email', driversController.postDrivers);
-// router.delete('/drivers/:driverId', driversController.deleteDrivers);
+router.post('/signup', authController.createUser);
+router.post('/login', authController.loginUser);
 
-// module.exports = router;
+module.exports = router;

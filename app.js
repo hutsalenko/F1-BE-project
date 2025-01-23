@@ -7,6 +7,7 @@ const app = express();
 
 const driverRoutes = require('./routes/drivers');
 const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/auth');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(cors({ origin: ['http://localhost:3000'] }));
 
 app.use(driverRoutes);
 app.use(userRoutes);
+app.use(authRoutes);
 
 mongoose
     .connect(process.env.MONGO_URL)
