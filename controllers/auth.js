@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.createUser = async (req, res, next) => {
@@ -45,9 +46,20 @@ exports.loginUser = async (req, res, next) => {
             return res.status(500).json({ message: 'Wrong password!' });
         }
 
-        console.log('CORRECT PASSWORD');
+        const token = jwt.sign(
+            {
+                email: existedUser.email,
+                userId: existedUser._id.toString(),
+            },
+            process.env.SECRET,
+            { expiresIn: process.env.TOKEN_EXPIRES_IN }
+        );
 
-        // res.status(201).json({ message: 'Successfully created user' });
+        res.status(200).json({
+            token: token,
+            userId: existedUser._id.toString(),
+            message: 'Successfully created user',
+        });
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;
