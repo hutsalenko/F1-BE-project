@@ -4,22 +4,17 @@ const { Base64 } = require('js-base64');
 module.exports = (req, res, next) => {
     const authHeader = req.get('Authorization');
     if (!authHeader) {
-        const error = new Error('Not authenticated.');
-        error.statusCode = 401;
-        throw error;
+        return res.status(401).json({ error: 'Not authenticated.' });
     }
     const token = Base64.decode(authHeader.split(' ')[1]);
     let decodedToken;
     try {
         decodedToken = jwt.verify(token, process.env.SECRET);
     } catch (err) {
-        err.statusCode = 500;
-        throw err;
+        return res.status(500).json({ error: err });
     }
     if (!decodedToken) {
-        const error = new Error('Not authenticated.');
-        error.statusCode = 401;
-        throw error;
+        return res.status(401).json({ error: 'Not authenticated.' });
     }
 
     req.userId = decodedToken.userId;

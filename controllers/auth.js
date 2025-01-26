@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-exports.createUser = async (req, res, next) => {
+exports.createUser = async (req, res) => {
     const { email, firstName, lastName, password } = req.body;
 
     try {
@@ -24,13 +24,11 @@ exports.createUser = async (req, res, next) => {
         await user.save();
         res.status(201).json({ message: 'Successfully created user' });
     } catch (err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
+        res.status(500).json({ error: err });
     }
 };
 
-exports.loginUser = async (req, res, next) => {
+exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -61,8 +59,6 @@ exports.loginUser = async (req, res, next) => {
             message: 'Successfully created user',
         });
     } catch (err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
+        res.status(500).json({ error: err });
     }
 };

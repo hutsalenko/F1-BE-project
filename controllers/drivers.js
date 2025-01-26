@@ -2,18 +2,16 @@ const mongoose = require('mongoose');
 const Driver = require('../models/driver');
 const User = require('../models/user');
 
-exports.getDrivers = async (req, res, next) => {
+exports.getDrivers = async (req, res) => {
     try {
         const allDrivers = await Driver.find({ userId: new mongoose.Types.ObjectId(req.params.userId) });
         res.status(200).json({ drivers: allDrivers });
     } catch (err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
+        res.status(500).json({ error: err });
     }
 };
 
-exports.postDrivers = async (req, res, next) => {
+exports.postDrivers = async (req, res) => {
     const { driverId, permanentNumber, code, url, givenName, familyName, dateOfBirth, nationality } = req.body;
 
     try {
@@ -42,19 +40,15 @@ exports.postDrivers = async (req, res, next) => {
 
         res.status(201).json({ message: 'Driver added successfully!' });
     } catch (err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
+        res.status(500).json({ error: err });
     }
 };
 
-exports.deleteDrivers = async (req, res, next) => {
+exports.deleteDrivers = async (req, res) => {
     try {
         await Driver.deleteOne({ driverId: req.params.driverId });
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
+        res.status(500).json({ error: err });
     }
 };
