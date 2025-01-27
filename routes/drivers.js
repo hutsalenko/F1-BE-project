@@ -6,7 +6,7 @@ const isAuth = require('../middleware/is-auth');
 const router = express.Router();
 
 router.get('/drivers/:userId', isAuth, driversController.getDrivers);
-router.post('/drivers/:email', isAuth, driversController.postDrivers);
+router.post('/drivers/:userId', isAuth, driversController.postDrivers);
 router.delete('/drivers/:driverId', driversController.deleteDrivers);
 
 module.exports = router;

@@ -15,7 +15,7 @@ exports.postDrivers = async (req, res) => {
     const { driverId, permanentNumber, code, url, givenName, familyName, dateOfBirth, nationality } = req.body;
 
     try {
-        const user = await User.findOne({ email: req.params.email });
+        const user = await User.findOne({ _id: req.params.userId });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
