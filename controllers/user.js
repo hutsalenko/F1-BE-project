@@ -1,12 +1,22 @@
-const { ObjectId } = require('mongoose').Types;
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Driver = require('../models/driver');
 
 exports.putUser = async (req, res) => {
-    const { email, firstName, lastName } = req.body;
+    const { email, firstName, lastName, oldPassword, newPassword } = req.body;
 
     try {
-        await User.updateOne({ _id: req.params.userId }, { email, firstName, lastName });
+        const existedUser = await User.findOne({ _id: req.params.userId });
+
+        const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
+
+        if (!isCorrectPassword) {
+            return res.status(500).json({ error: 'Wrong password!' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+        await User.updateOne({ _id: req.params.userId }, { email, firstName, lastName, password: hashedPassword });
         res.status(200).json({ message: 'Successfully updated user!' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -28,8 +38,6 @@ exports.getUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-    const selectedUser = ObjectId.createFromHexString(req.params.userId);
-
     try {
         await User.deleteOne({ _id: req.params.userId });
         await Driver.deleteMany({ userId: req.params.userId });
