@@ -2,20 +2,14 @@ const { ObjectId } = require('mongoose').Types;
 const User = require('../models/user');
 const Driver = require('../models/driver');
 
-exports.postUser = async (req, res) => {
+exports.putUser = async (req, res) => {
     const { email, firstName, lastName } = req.body;
 
-    const user = new User({
-        email,
-        firstName,
-        lastName,
-    });
-
     try {
-        const newUser = await user.save();
-        res.status(201).json({ message: 'Successfully created user!', data: newUser });
+        await User.updateOne({ _id: req.params.userId }, { email, firstName, lastName });
+        res.status(200).json({ message: 'Successfully updated user!' });
     } catch (err) {
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: err.message });
     }
 };
 
@@ -37,8 +31,8 @@ exports.deleteUser = async (req, res) => {
     const selectedUser = ObjectId.createFromHexString(req.params.userId);
 
     try {
-        await User.findOneAndDelete({ _id: selectedUser });
-        await Driver.deleteMany({ userId: selectedUser });
+        await User.deleteOne({ _id: req.params.userId });
+        await Driver.deleteMany({ userId: req.params.userId });
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
         res.status(500).json({ error: err });

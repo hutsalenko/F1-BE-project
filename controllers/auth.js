@@ -9,7 +9,7 @@ exports.createUser = async (req, res) => {
         const existedUser = await User.findOne({ email });
 
         if (existedUser) {
-            return res.status(500).json({ message: 'User already exist' });
+            return res.status(500).json({ error: 'User already exist' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -35,13 +35,13 @@ exports.loginUser = async (req, res) => {
         const existedUser = await User.findOne({ email });
 
         if (!existedUser) {
-            return res.status(500).json({ message: 'A user with this email could not be found.' });
+            return res.status(500).json({ error: 'A user with this email could not be found.' });
         }
 
         const isCorrectPassword = await bcrypt.compare(password, existedUser.password);
 
         if (!isCorrectPassword) {
-            return res.status(500).json({ message: 'Wrong password!' });
+            return res.status(500).json({ error: 'Wrong password!' });
         }
 
         const token = jwt.sign(

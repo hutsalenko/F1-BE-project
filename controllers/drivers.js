@@ -49,6 +49,6 @@ exports.deleteDrivers = async (req, res) => {
         await Driver.deleteOne({ driverId: req.params.driverId });
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
-        res.status(500).json({ error: 'Deleting driver failed.' });
+        res.status(500).json({ error: err });
     }
 };
