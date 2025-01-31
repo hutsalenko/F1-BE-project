@@ -44,6 +44,17 @@ exports.postDrivers = async (req, res) => {
     }
 };
 
+exports.putDrivers = async (req, res) => {
+    const image = req.file;
+
+    try {
+        await Driver.updateOne({ _id: req.params.userId }, { imageUrl: image.path });
+        res.status(200).json({ message: 'Successfully updated driver!' });
+    } catch (error) {
+        res.status(500).json({ error: err });
+    }
+};
+
 exports.deleteDrivers = async (req, res) => {
     try {
         await Driver.deleteOne({ driverId: req.params.driverId });
@@ -52,3 +63,10 @@ exports.deleteDrivers = async (req, res) => {
         res.status(500).json({ error: err });
     }
 };
+
+//TODO
+//Where to keep JWT in storage or cookies
+//When Remove driver also remove icon
+//The same as previous but only when we delete user we need to remove everything
+//{timestamp: true} field to schemas
+//Add logic to delete picture

@@ -9,12 +9,12 @@ const driverSchema = new mongoose.Schema({
     familyName: String,
     dateOfBirth: Date,
     nationality: String,
+    imageUrl: String,
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-    imageUrl: String,
 });
 
 module.exports = mongoose.model('Driver', driverSchema);
