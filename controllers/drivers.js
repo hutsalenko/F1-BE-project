@@ -73,5 +73,4 @@ exports.deleteDrivers = async (req, res) => {
 };
 
 //The same as previous but only when we delete user we need to remove everything
-//{timestamp: true} field to schemas
 //Add logic to delete picture
