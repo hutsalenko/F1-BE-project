@@ -1,3 +1,5 @@
+const { join } = require('path');
+const { unlink } = require('fs');
 const mongoose = require('mongoose');
 const Driver = require('../models/driver');
 const User = require('../models/user');
@@ -57,16 +59,19 @@ exports.putDrivers = async (req, res) => {
 
 exports.deleteDrivers = async (req, res) => {
     try {
-        await Driver.deleteOne({ driverId: req.params.driverId });
+        const deletedDriver = await Driver.findOneAndDelete({ driverId: req.params.driverId });
+
+        if (deletedDriver.imageUrl) {
+            const imagePath = join(__dirname, '..', deletedDriver.imageUrl);
+            unlink(imagePath, (err) => err);
+        }
+
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
         res.status(500).json({ error: err });
     }
 };
 
-//TODO
-//Where to keep JWT in storage or cookies
-//When Remove driver also remove icon
 //The same as previous but only when we delete user we need to remove everything
 //{timestamp: true} field to schemas
 //Add logic to delete picture
