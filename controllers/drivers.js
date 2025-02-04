@@ -1,12 +1,11 @@
 const { join } = require('path');
 const { unlink } = require('fs');
-const mongoose = require('mongoose');
 const Driver = require('../models/driver');
 const User = require('../models/user');
 
 exports.getDrivers = async (req, res) => {
     try {
-        const allDrivers = await Driver.find({ userId: new mongoose.Types.ObjectId(req.params.userId) });
+        const allDrivers = await Driver.find({ userId: req.params.userId });
         res.status(200).json({ drivers: allDrivers });
     } catch (err) {
         res.status(500).json({ error: err });
@@ -50,14 +49,14 @@ exports.putDrivers = async (req, res) => {
     const image = req.file;
 
     try {
-        await Driver.updateOne({ _id: req.params.userId }, { imageUrl: image.path });
+        await Driver.updateOne({ _id: req.params.driverId }, { imageUrl: image.path });
         res.status(200).json({ message: 'Successfully updated driver!' });
     } catch (error) {
         res.status(500).json({ error: err });
     }
 };
 
-exports.deleteDrivers = async (req, res) => {
+exports.deleteDriver = async (req, res) => {
     try {
         const deletedDriver = await Driver.findOneAndDelete({ driverId: req.params.driverId });
 
@@ -72,5 +71,15 @@ exports.deleteDrivers = async (req, res) => {
     }
 };
 
+exports.getSingleDriver = async (req, res) => {
+    try {
+        const singleDriver = await Driver.findOne({ _id: req.params.driverId });
+        res.status(200).json({ driver: singleDriver });
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+};
+
+//When we change photo,we need to remove previous photo
 //The same as previous but only when we delete user we need to remove everything
 //Add logic to delete picture

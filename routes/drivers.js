@@ -7,7 +7,8 @@ const router = express.Router();
 
 router.get('/drivers/:userId', isAuth, driversController.getDrivers);
 router.post('/drivers/:userId', isAuth, driversController.postDrivers);
-router.put('/drivers/:userId', isAuth, driversController.putDrivers);
-router.delete('/drivers/:driverId', isAuth, driversController.deleteDrivers);
+router.get('/driver/:driverId', isAuth, driversController.getSingleDriver);
+router.put('/driver/:driverId', isAuth, driversController.putDrivers);
+router.delete('/driver/:driverId', isAuth, driversController.deleteDriver);
 
 module.exports = router;
