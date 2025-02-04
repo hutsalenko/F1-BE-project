@@ -6,9 +6,16 @@ exports.putDriver = async (req, res) => {
     const image = req.file;
 
     try {
+        const updatedDriver = await Driver.findById({ _id: req.params.driverId });
+
+        if (updatedDriver.imageUrl) {
+            const imagePath = join(__dirname, '..', updatedDriver.imageUrl);
+            unlink(imagePath, (err) => err);
+        }
+
         await Driver.updateOne({ _id: req.params.driverId }, { imageUrl: image.path });
         res.status(200).json({ message: 'Successfully updated driver!' });
-    } catch (error) {
+    } catch (err) {
         res.status(500).json({ error: err });
     }
 };
@@ -37,6 +44,5 @@ exports.getSingleDriver = async (req, res) => {
     }
 };
 
-//When we change photo,we need to remove previous photo
 //The same as previous but only when we delete user we need to remove everything
 //Add logic to delete picture
