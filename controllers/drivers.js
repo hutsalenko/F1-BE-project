@@ -68,7 +68,7 @@ exports.deleteDrivers = async (req, res) => {
 
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: console.log(err) });
     }
 };
 
