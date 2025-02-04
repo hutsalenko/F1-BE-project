@@ -24,7 +24,8 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const driverRoutes = require('./routes/drivers');
+const driversRoutes = require('./routes/drivers');
+const driverRoutes = require('./routes/driver');
 const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
 
@@ -34,6 +35,7 @@ app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(cors({ origin: ['http://localhost:3000'] }));
 
+app.use(driversRoutes);
 app.use(driverRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
