@@ -8,7 +8,7 @@ exports.putUser = async (req, res) => {
     const { email, firstName, lastName, oldPassword, newPassword } = req.body;
 
     try {
-        const existedUser = await User.findOne({ _id: req.params.userId });
+        const existedUser = await User.findById(req.params.userId);
 
         const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
 
@@ -27,7 +27,7 @@ exports.putUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
     try {
-        const user = await User.findOne({ _id: req.params.userId });
+        const user = await User.findById(req.params.userId);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

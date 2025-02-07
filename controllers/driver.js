@@ -6,7 +6,7 @@ exports.putDriver = async (req, res) => {
     const image = req.file;
 
     try {
-        const updatedDriver = await Driver.findById({ _id: req.params.driverId });
+        const updatedDriver = await Driver.findById(req.params.driverId);
 
         if (updatedDriver.imageUrl) {
             const imagePath = join(__dirname, '..', updatedDriver.imageUrl);
@@ -37,7 +37,7 @@ exports.deleteDriver = async (req, res) => {
 
 exports.getSingleDriver = async (req, res) => {
     try {
-        const singleDriver = await Driver.findOne({ _id: req.params.driverId });
+        const singleDriver = await Driver.findById(req.params.driverId);
         res.status(200).json({ driver: singleDriver });
     } catch (err) {
         res.status(500).json({ error: err });
