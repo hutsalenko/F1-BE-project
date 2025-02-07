@@ -1,5 +1,3 @@
-const { join } = require('path');
-const { unlink } = require('fs');
 const Driver = require('../models/driver');
 const User = require('../models/user');
 

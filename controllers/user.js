@@ -1,3 +1,5 @@
+const { join } = require('path');
+const { unlink } = require('fs');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Driver = require('../models/driver');
@@ -39,8 +41,16 @@ exports.getUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        await User.deleteOne({ _id: req.params.userId });
-        await Driver.deleteMany({ userId: req.params.userId });
+        const deletedUser = await User.findByIdAndDelete(req.params.userId).populate('drivers');
+
+        deletedUser.drivers.forEach((driver) => {
+            if (driver.imageUrl) {
+                const imagePath = join(__dirname, '..', driver.imageUrl);
+                unlink(imagePath, (err) => err);
+            }
+        });
+
+        await Driver.deleteMany({ _id: { $in: deletedUser.drivers } });
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
         res.status(500).json({ error: err });

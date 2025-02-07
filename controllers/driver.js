@@ -43,6 +43,3 @@ exports.getSingleDriver = async (req, res) => {
         res.status(500).json({ error: err });
     }
 };
-
-//The same as previous but only when we delete user we need to remove everything
-//Add logic to delete picture
