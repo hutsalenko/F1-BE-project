@@ -14,14 +14,13 @@ exports.createUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const user = new User({
+        await User.create({
             email,
             firstName,
             lastName,
             password: hashedPassword,
         });
 
-        await user.save();
         res.status(201).json({ message: 'Successfully created user' });
     } catch (err) {
         res.status(500).json({ error: err });

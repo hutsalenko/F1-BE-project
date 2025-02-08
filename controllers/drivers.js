@@ -20,7 +20,7 @@ exports.postDrivers = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const driver = new Driver({
+        const newDriver = await Driver.create({
             driverId,
             permanentNumber,
             code,
@@ -31,8 +31,6 @@ exports.postDrivers = async (req, res) => {
             nationality,
             userId: user._id,
         });
-
-        const newDriver = await driver.save();
 
         user.drivers.push(newDriver);
         await user.save();
