@@ -8,7 +8,7 @@ exports.putUser = async (req, res) => {
     const { email, firstName, lastName, oldPassword, newPassword } = req.body;
 
     try {
-        const existedUser = await User.findById(req.params.userId);
+        const existedUser = await User.findById(req.userId);
 
         const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
 
@@ -18,7 +18,7 @@ exports.putUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(newPassword, 12);
 
-        await User.updateOne({ _id: req.params.userId }, { email, firstName, lastName, password: hashedPassword });
+        await User.updateOne({ _id: req.userId }, { email, firstName, lastName, password: hashedPassword });
         res.status(200).json({ message: 'Successfully updated user!' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -27,7 +27,7 @@ exports.putUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        const user = await User.findById(req.userId);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -41,7 +41,7 @@ exports.getUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.userId).populate('drivers');
+        const deletedUser = await User.findByIdAndDelete(req.userId).populate('drivers');
 
         deletedUser.drivers.forEach((driver) => {
             if (driver.imageUrl) {

@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const { verify } = require('jsonwebtoken');
 const { Base64 } = require('js-base64');
 
 module.exports = (req, res, next) => {
@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     const token = Base64.decode(authHeader.split(' ')[1]);
     let decodedToken;
     try {
-        decodedToken = jwt.verify(token, process.env.SECRET);
+        decodedToken = verify(token, process.env.SECRET);
     } catch (err) {
         return res.status(500).json({ error: err });
     }

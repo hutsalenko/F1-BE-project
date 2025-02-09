@@ -3,7 +3,7 @@ const User = require('../models/user');
 
 exports.getDrivers = async (req, res) => {
     try {
-        const allDrivers = await Driver.find({ userId: req.params.userId });
+        const allDrivers = await Driver.find({ userId: req.userId });
         res.status(200).json({ drivers: allDrivers });
     } catch (err) {
         res.status(500).json({ error: err });
@@ -14,7 +14,7 @@ exports.postDrivers = async (req, res) => {
     const { driverId, permanentNumber, code, url, givenName, familyName, dateOfBirth, nationality } = req.body;
 
     try {
-        const user = await User.findOne({ _id: req.params.userId });
+        const user = await User.findOne({ _id: req.userId });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

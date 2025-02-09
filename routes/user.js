@@ -5,8 +5,8 @@ const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
-router.get('/user/:userId', isAuth, userController.getUser);
-router.put('/user/:userId', isAuth, userController.putUser);
-router.delete('/user/:userId', isAuth, userController.deleteUser);
+router.get('/user', isAuth, userController.getUser);
+router.put('/user', isAuth, userController.putUser);
+router.delete('/user', isAuth, userController.deleteUser);
 
 module.exports = router;
