@@ -6,19 +6,30 @@ const Driver = require('../models/driver');
 
 exports.putUser = async (req, res) => {
     const { email, firstName, lastName, oldPassword, newPassword } = req.body;
+    let hashedPassword;
 
     try {
-        const existedUser = await User.findById(req.userId);
+        if (req.body.newPassword && req.body.oldPassword) {
+            const existedUser = await User.findById(req.userId);
+            const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
 
-        const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
+            if (!isCorrectPassword) {
+                return res.status(500).json({ error: 'Wrong password!' });
+            }
 
-        if (!isCorrectPassword) {
-            return res.status(500).json({ error: 'Wrong password!' });
+            hashedPassword = await bcrypt.hash(newPassword, 12);
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        await User.updateOne(
+            { _id: req.userId },
+            {
+                ...(email && { email }),
+                ...(firstName && { firstName }),
+                ...(lastName && { lastName }),
+                ...(hashedPassword && { password: hashedPassword }),
+            }
+        );
 
-        await User.updateOne({ _id: req.userId }, { email, firstName, lastName, password: hashedPassword });
         res.status(200).json({ message: 'Successfully updated user!' });
     } catch (err) {
         res.status(500).json({ error: err.message });
