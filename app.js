@@ -28,6 +28,7 @@ const driversRoutes = require('./routes/drivers');
 const driverRoutes = require('./routes/driver');
 const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
+const postRoutes = require('./routes/post');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -39,10 +40,15 @@ app.use(driversRoutes);
 app.use(driverRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
+app.use(postRoutes);
 
 mongoose
     .connect(process.env.MONGO_URL)
     .then(() => {
-        app.listen(8080);
+        const server = app.listen(8080);
+        const io = require('./socket').init(server);
+        io.on('connection', (socket) => {
+            console.log('Client connected');
+        });
     })
     .catch((err) => console.log(err));

@@ -49,47 +49,39 @@ exports.postDrivers = async (req, res) => {
     }
 };
 
-// router.get('/api/testSeries', async (req, res) => {
-//   try {
-//     // Pagination
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
+// // Pagination
+// const page = parseInt(req.query.page) || 1;
+// const limit = parseInt(req.query.limit) || 10;
 
-//     // Filtering
-//     const filter = {};
-//     if (req.query.searchTerm) {
-//       filter.$or = [
+// // Filtering
+// const filter = {};
+// if (req.query.searchTerm) {
+//     filter.$or = [
 //         { name: { $regex: req.query.searchTerm, $options: 'i' } },
 //         // Add other fields you want to search here
 //         { category: { $regex: req.query.searchTerm, $options: 'i' } },
-//         { subCategory: { $regex: req.query.searchTerm, $options: 'i' } }
-//       ];
-//     }
+//         { subCategory: { $regex: req.query.searchTerm, $options: 'i' } },
+//     ];
+// }
 
-//     // Sorting
-//     const sort = {};
-//     if (req.query.sortBy) {
-//       const [field, order] = req.query.sortBy.split(':');
-//       sort[field] = order === 'desc' ? -1 : 1;
-//     }
+// // Sorting
+// const sort = {};
+// if (req.query.sortBy) {
+//     const [field, order] = req.query.sortBy.split(':');
+//     sort[field] = order === 'desc' ? -1 : 1;
+// }
 
-//     // Fetch all matching test series without pagination for global search
-//     const allMatchingTestSeries = await TestSeries.find(filter).sort(sort);
+// // Fetch all matching test series without pagination for global search
+// const allMatchingTestSeries = await TestSeries.find(filter).sort(sort);
 
-//     // Apply pagination to the results
-//     const totalTestSeries = allMatchingTestSeries.length;
-//     const startIndex = (page - 1) * limit;
-//     const endIndex = startIndex + limit;
-//     const paginatedTestSeries = allMatchingTestSeries.slice(startIndex, endIndex);
+// // Apply pagination to the results
+// const totalTestSeries = allMatchingTestSeries.length;
+// const startIndex = (page - 1) * limit;
+// const endIndex = startIndex + limit;
+// const paginatedTestSeries = allMatchingTestSeries.slice(startIndex, endIndex);
 
-//     res.json({
-//       testSeries: paginatedTestSeries,
-//       totalPages: Math.ceil(totalTestSeries / limit),
-//       currentPage: page,
-//       totalItems: totalTestSeries
-//     });
-//   } catch (error) {
-//     console.error('Error fetching test series:', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
+// res.json({
+//     testSeries: paginatedTestSeries,
+//     totalPages: Math.ceil(totalTestSeries / limit),
+//     totalItems: totalTestSeries,
 // });

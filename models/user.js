@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema(
                 ref: 'Driver',
             },
         ],
+        posts: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Post',
+            },
+        ],
     },
     { timestamps: true }
 );
