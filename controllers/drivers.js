@@ -22,10 +22,16 @@ exports.postDrivers = async (req, res) => {
     const { driverId, permanentNumber, code, url, givenName, familyName, dateOfBirth, nationality } = req.body;
 
     try {
-        const user = await User.findOne({ _id: req.userId });
+        const user = await User.findOne({ _id: req.userId }).populate('drivers');
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
+        }
+
+        const ifAlreadyExist = user.drivers.some((driver) => driver.driverId === driverId);
+
+        if (ifAlreadyExist) {
+            return res.status(409).json({ error: 'Already exist!' });
         }
 
         const newDriver = await Driver.create({
