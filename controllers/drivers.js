@@ -55,6 +55,8 @@ exports.postDrivers = async (req, res) => {
     }
 };
 
+//Add maximum amount of requests
+
 // // Pagination
 // const page = parseInt(req.query.page) || 1;
 // const limit = parseInt(req.query.limit) || 10;
