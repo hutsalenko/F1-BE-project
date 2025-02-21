@@ -1,9 +1,19 @@
+const NodeCache = require('node-cache');
 const Driver = require('../models/driver');
 const User = require('../models/user');
+
+const myCache = new NodeCache({ stdTTL: 10 });
 
 exports.getDrivers = async (req, res) => {
     const currentPage = +req.query.page || 1;
     const limitPerPage = +req.query.limit || 10;
+
+    const cachedDriversList = myCache.get('drivers');
+    const cachedTotalDrivers = myCache.get('total');
+
+    if (cachedDriversList && cachedTotalDrivers) {
+        return res.status(200).json({ drivers: cachedDriversList, totalItems: cachedTotalDrivers });
+    }
 
     try {
         const total = await Driver.find({ userId: req.userId }).countDocuments();
@@ -11,6 +21,11 @@ exports.getDrivers = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip((currentPage - 1) * limitPerPage)
             .limit(limitPerPage);
+
+        myCache.mset([
+            { key: 'drivers', val: allDrivers },
+            { key: 'total', val: total },
+        ]);
 
         res.status(200).json({ drivers: allDrivers, totalItems: total });
     } catch (err) {
