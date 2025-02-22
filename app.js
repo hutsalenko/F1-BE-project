@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const allowCors = require('./middleware/allow-cors');
+const errorHandler = require('./middleware/error-handler');
 
 const app = express();
 
@@ -41,6 +42,8 @@ app.use(driverRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
 app.use(postRoutes);
+
+app.use(errorHandler);
 
 mongoose
     .connect(process.env.MONGO_URL)
