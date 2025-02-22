@@ -2,8 +2,8 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const multer = require('multer');
+const allowCors = require('./middleware/allow-cors');
 
 const app = express();
 
@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use(cors({ origin: ['http://localhost:3000'] }));
+app.use(allowCors);
 
 app.use(driversRoutes);
 app.use(driverRoutes);
