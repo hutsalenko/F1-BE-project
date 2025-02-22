@@ -71,6 +71,10 @@ exports.postDrivers = async (req, res) => {
 };
 
 //Add maximum amount of requests
+//How to write log
+//Work with create file and how to add information there
+//Library 'limiter' for request and 'hpp' for poluation,'helmet' for headers
+//Change cors from library to middleware
 
 // // Pagination
 // const page = parseInt(req.query.page) || 1;
