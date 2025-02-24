@@ -3,7 +3,7 @@ import fs from 'fs';
 import bcrypt from 'bcryptjs';
 import { UserModel } from '../models/user.mjs';
 import { DriverModel } from '../models/driver.mjs';
-import { checkDirname } from '../helper/check-dirname.mjs';
+import { checkDirname } from '../helpers/check-dirname.mjs';
 
 export async function putUser(req, res) {
     const { email, firstName, lastName, oldPassword, newPassword } = req.body;

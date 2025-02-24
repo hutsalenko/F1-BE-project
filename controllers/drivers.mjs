@@ -59,7 +59,6 @@ export async function postDrivers(req, res) {
 //How to write log
 //Work with create file and how to add information there
 //Library 'limiter' for request and 'hpp' for poluation,'helmet' for headers
-//Move multer to middleware
 
 // // Pagination
 // const page = parseInt(req.query.page) || 1;

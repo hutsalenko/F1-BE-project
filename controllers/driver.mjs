@@ -2,7 +2,7 @@ import NodeCache from 'node-cache';
 import path from 'path';
 import fs from 'fs';
 import { DriverModel } from '../models/driver.mjs';
-import { checkDirname } from '../helper/check-dirname.mjs';
+import { checkDirname } from '../helpers/check-dirname.mjs';
 
 const myCache = new NodeCache({ stdTTL: 10 });
 

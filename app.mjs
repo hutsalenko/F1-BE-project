@@ -4,7 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import { init } from './socket.mjs';
-import { checkDirname } from './helper/check-dirname.mjs';
+import { checkDirname } from './helpers/check-dirname.mjs';
 import allowCors from './middleware/allow-cors.mjs';
 import errorHandler from './middleware/allow-cors.mjs';
 
