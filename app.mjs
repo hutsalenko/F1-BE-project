@@ -1,10 +1,12 @@
-require('dotenv').config();
-const path = require('path');
-const express = require('express');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const allowCors = require('./middleware/allow-cors');
-const errorHandler = require('./middleware/error-handler');
+import 'dotenv/config';
+import path from 'path';
+import express from 'express';
+import mongoose from 'mongoose';
+import multer from 'multer';
+import { init } from './socket.mjs';
+import { fileURLToPath } from 'url';
+import allowCors from './middleware/allow-cors.mjs';
+import errorHandler from './middleware/allow-cors.mjs';
 
 const app = express();
 
@@ -25,15 +27,17 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const driversRoutes = require('./routes/drivers');
-const driverRoutes = require('./routes/driver');
-const userRoutes = require('./routes/user');
-const authRoutes = require('./routes/auth');
-const postRoutes = require('./routes/post');
+import { driversRoutes } from './routes/drivers.mjs';
+import { driverRoutes } from './routes/driver.mjs';
+import { userRoutes } from './routes/user.mjs';
+import { authRoutes } from './routes/auth.mjs';
+import { postRoutes } from './routes/post.mjs';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(allowCors);
 
@@ -49,7 +53,7 @@ mongoose
     .connect(process.env.MONGO_URL)
     .then(() => {
         const server = app.listen(8080);
-        const io = require('./socket').init(server);
+        const io = init(server);
         io.on('connection', (socket) => {
             console.log('Client connected');
         });
