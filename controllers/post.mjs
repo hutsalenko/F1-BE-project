@@ -1,31 +1,28 @@
-const io = require('../socket');
-const Post = require('../models/post');
-const User = require('../models/user');
+import { getIO } from '../socket.mjs';
+import { PostModel } from '../models/post.mjs';
+import { UserModel } from '../models/user.mjs';
 
-exports.getPosts = async (req, res) => {
+export async function getPosts(req, res) {
     try {
-        const posts = await Post.find().populate('creator').sort({ createdAt: -1 });
-
+        const posts = await PostModel.find().populate('creator').sort({ createdAt: -1 });
         res.status(200).json({ message: 'Fetched posts successfully.', posts: posts });
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
 
-exports.createPost = async (req, res) => {
-    console.log(req.body);
-
+export async function createPost(req, res) {
     try {
-        const post = await Post.create({
+        const post = await PostModel.create({
             content: req.body.content,
             creator: req.userId,
         });
 
-        const user = await User.findById(req.userId);
+        const user = await UserModel.findById(req.userId);
 
         user.posts.push(post);
         await user.save();
-        io.getIO().emit('posts', {
+        getIO().emit('posts', {
             action: 'create',
             post: { ...post._doc, creator: { _id: req.userId, firstName: user.firstName, lastName: user.lastName } },
         });
@@ -37,43 +34,43 @@ exports.createPost = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
 
-exports.updatePost = async (req, res) => {
+export async function updatePost(req, res) {
     const postId = req.params.postId;
     const content = req.body.content;
 
     try {
-        const post = await Post.findById(postId).populate('creator');
+        const post = await PostModel.findById(postId).populate('creator');
         if (!post) {
             return res.status(404).json({ error: 'Could not find post.' });
         }
         post.content = content;
         const result = await post.save();
-        io.getIO().emit('posts', { action: 'update', post: result });
+        getIO().emit('posts', { action: 'update', post: result });
         res.status(200).json({ message: 'Post updated!', post: result });
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
 
-exports.deletePost = async (req, res) => {
+export async function deletePost(req, res) {
     const postId = req.params.postId;
 
     try {
-        const post = await Post.findById(postId);
+        const post = await PostModel.findById(postId);
 
         if (!post) {
             return res.status(404).json({ error: 'Could not find post.' });
         }
-        await Post.findByIdAndDelete(postId);
+        await PostModel.findByIdAndDelete(postId);
 
-        const user = await User.findById(req.userId);
+        const user = await UserModel.findById(req.userId);
         user.posts.pull(postId);
         await user.save();
-        io.getIO().emit('posts', { action: 'delete', post: postId });
+        getIO().emit('posts', { action: 'delete', post: postId });
         res.status(200).json({ message: 'Deleted post.' });
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}

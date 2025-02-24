@@ -1,16 +1,16 @@
-const { join } = require('path');
-const { unlink } = require('fs');
-const bcrypt = require('bcryptjs');
-const User = require('../models/user');
-const Driver = require('../models/driver');
+import path from 'path';
+import fs from 'fs';
+import bcrypt from 'bcryptjs';
+import { UserModel } from '../models/user.mjs';
+import { DriverModel } from '../models/driver.mjs';
 
-exports.putUser = async (req, res) => {
+export async function putUser(req, res) {
     const { email, firstName, lastName, oldPassword, newPassword } = req.body;
     let hashedPassword;
 
     try {
         if (req.body.newPassword && req.body.oldPassword) {
-            const existedUser = await User.findById(req.userId);
+            const existedUser = await UserModel.findById(req.userId);
             const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
 
             if (!isCorrectPassword) {
@@ -20,7 +20,7 @@ exports.putUser = async (req, res) => {
             hashedPassword = await bcrypt.hash(newPassword, 12);
         }
 
-        await User.updateOne(
+        await UserModel.updateOne(
             { _id: req.userId },
             {
                 ...(email && { email }),
@@ -34,11 +34,11 @@ exports.putUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-};
+}
 
-exports.getUser = async (req, res) => {
+export async function getUser(req, res) {
     try {
-        const user = await User.findById(req.userId);
+        const user = await UserModel.findById(req.userId);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -48,22 +48,22 @@ exports.getUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: 'Getting user failed.' });
     }
-};
+}
 
-exports.deleteUser = async (req, res) => {
+export async function deleteUser(req, res) {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.userId).populate('drivers');
+        const deletedUser = await UserModel.findByIdAndDelete(req.userId).populate('drivers');
 
         deletedUser.drivers.forEach((driver) => {
             if (driver.imageUrl) {
-                const imagePath = join(__dirname, '..', driver.imageUrl);
-                unlink(imagePath, (err) => err);
+                const imagePath = path.join(path.resolve(), '..', driver.imageUrl);
+                fs.unlink(imagePath, (err) => err);
             }
         });
 
-        await Driver.deleteMany({ _id: { $in: deletedUser.drivers } });
+        await DriverModel.deleteMany({ _id: { $in: deletedUser.drivers } });
         res.status(200).json({ message: 'Successfully deleted!' });
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}

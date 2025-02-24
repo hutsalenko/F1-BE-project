@@ -1,43 +1,28 @@
-const NodeCache = require('node-cache');
-const Driver = require('../models/driver');
-const User = require('../models/user');
+import { DriverModel } from '../models/driver.mjs';
+import { UserModel } from '../models/user.mjs';
 
-const myCache = new NodeCache({ stdTTL: 10 });
-
-exports.getDrivers = async (req, res) => {
+export async function getDrivers(req, res) {
     const currentPage = +req.query.page || 1;
     const limitPerPage = +req.query.limit || 10;
 
-    const cachedDriversList = myCache.get('drivers');
-    const cachedTotalDrivers = myCache.get('total');
-
-    if (cachedDriversList && cachedTotalDrivers) {
-        return res.status(200).json({ drivers: cachedDriversList, totalItems: cachedTotalDrivers });
-    }
-
     try {
-        const total = await Driver.find({ userId: req.userId }).countDocuments();
-        const allDrivers = await Driver.find({ userId: req.userId })
+        const total = await DriverModel.find({ userId: req.userId }).countDocuments();
+        const allDrivers = await DriverModel.find({ userId: req.userId })
             .sort({ createdAt: -1 })
             .skip((currentPage - 1) * limitPerPage)
             .limit(limitPerPage);
-
-        myCache.mset([
-            { key: 'drivers', val: allDrivers },
-            { key: 'total', val: total },
-        ]);
 
         res.status(200).json({ drivers: allDrivers, totalItems: total });
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
 
-exports.postDrivers = async (req, res) => {
+export async function postDrivers(req, res) {
     const { driverId, permanentNumber, code, url, givenName, familyName, dateOfBirth, nationality } = req.body;
 
     try {
-        const user = await User.findOne({ _id: req.userId }).populate('drivers');
+        const user = await UserModel.findOne({ _id: req.userId }).populate('drivers');
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -49,7 +34,7 @@ exports.postDrivers = async (req, res) => {
             return res.status(409).json({ error: 'Already exist!' });
         }
 
-        const newDriver = await Driver.create({
+        const newDriver = await DriverModel.create({
             driverId,
             permanentNumber,
             code,
@@ -68,12 +53,13 @@ exports.postDrivers = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
 
 //Add maximum amount of requests
 //How to write log
 //Work with create file and how to add information there
 //Library 'limiter' for request and 'hpp' for poluation,'helmet' for headers
+//Move multer to middleware
 
 // // Pagination
 // const page = parseInt(req.query.page) || 1;

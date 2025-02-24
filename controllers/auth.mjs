@@ -1,12 +1,12 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { UserModel } from '../models/user.mjs';
 
-exports.createUser = async (req, res) => {
+export async function createUser(req, res) {
     const { email, firstName, lastName, password } = req.body;
 
     try {
-        const existedUser = await User.findOne({ email });
+        const existedUser = await UserModel.findOne({ email });
 
         if (existedUser) {
             return res.status(500).json({ error: 'User already exist' });
@@ -14,7 +14,7 @@ exports.createUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        await User.create({
+        await UserModel.create({
             email,
             firstName,
             lastName,
@@ -25,13 +25,13 @@ exports.createUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
 
-exports.loginUser = async (req, res) => {
+export async function loginUser(req, res) {
     const { email, password } = req.body;
 
     try {
-        const existedUser = await User.findOne({ email });
+        const existedUser = await UserModel.findOne({ email });
 
         if (!existedUser) {
             return res.status(500).json({ error: 'A user with this email could not be found.' });
@@ -60,4 +60,4 @@ exports.loginUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err });
     }
-};
+}
