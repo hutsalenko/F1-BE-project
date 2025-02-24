@@ -2,32 +2,22 @@ import NodeCache from 'node-cache';
 import path from 'path';
 import fs from 'fs';
 import { DriverModel } from '../models/driver.mjs';
-import { fileURLToPath } from 'url';
+import { checkDirname } from '../helper/check-dirname.mjs';
 
 const myCache = new NodeCache({ stdTTL: 10 });
 
 export async function putDriver(req, res) {
     const image = req.file;
 
-    //TODO ADD HELPER FOR _DIRNAME
-    //Remove all resolve() and add _dirname helper
-    //Check all places where we use some path/fs libraries and remove this 1 part before dot
-
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-
     try {
         const updatedDriver = await DriverModel.findById(req.params.driverId);
 
         if (updatedDriver.imageUrl) {
-            const imagePath = path.join(__dirname, '..', updatedDriver.imageUrl);
-            console.log('imagePath', imagePath);
-
+            const imagePath = path.join(checkDirname(import.meta.url), '..', updatedDriver.imageUrl);
             fs.unlink(imagePath, (err) => err);
         }
 
-        const fff = await DriverModel.updateOne({ _id: req.params.driverId }, { imageUrl: image.path });
-        console.log('fff', fff);
+        await DriverModel.updateOne({ _id: req.params.driverId }, { imageUrl: image.path });
 
         res.status(200).json({ message: 'Successfully updated driver!' });
     } catch (err) {
@@ -40,7 +30,7 @@ export async function deleteDriver(req, res) {
         const deletedDriver = await DriverModel.findOneAndDelete({ driverId: req.params.driverId });
 
         if (deletedDriver.imageUrl) {
-            const imagePath = path.join(path.resolve(), '..', deletedDriver.imageUrl);
+            const imagePath = path.join(checkDirname(import.meta.url), '..', deletedDriver.imageUrl);
             fs.unlink(imagePath, (err) => err);
         }
 

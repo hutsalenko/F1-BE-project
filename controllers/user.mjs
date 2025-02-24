@@ -3,6 +3,7 @@ import fs from 'fs';
 import bcrypt from 'bcryptjs';
 import { UserModel } from '../models/user.mjs';
 import { DriverModel } from '../models/driver.mjs';
+import { checkDirname } from '../helper/check-dirname.mjs';
 
 export async function putUser(req, res) {
     const { email, firstName, lastName, oldPassword, newPassword } = req.body;
@@ -56,7 +57,7 @@ export async function deleteUser(req, res) {
 
         deletedUser.drivers.forEach((driver) => {
             if (driver.imageUrl) {
-                const imagePath = path.join(path.resolve(), '..', driver.imageUrl);
+                const imagePath = path.join(checkDirname(import.meta.url), '..', driver.imageUrl);
                 fs.unlink(imagePath, (err) => err);
             }
         });
