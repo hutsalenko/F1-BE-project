@@ -1,4 +1,4 @@
-module.exports = (error, _, res) => {
+export default (error, _, res) => {
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;
