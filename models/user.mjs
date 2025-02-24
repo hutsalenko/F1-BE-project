@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
     {
         email: String,
         firstName: String,
@@ -8,13 +8,13 @@ const userSchema = new mongoose.Schema(
         password: String,
         drivers: [
             {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'Driver',
             },
         ],
         posts: [
             {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'Post',
             },
         ],
@@ -22,4 +22,6 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model('User', userSchema);
+const UserModel = model('User', userSchema);
+
+export { UserModel };

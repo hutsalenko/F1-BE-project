@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const driverSchema = new mongoose.Schema(
+const driverSchema = new Schema(
     {
         driverId: String,
         permanentNumber: Number,
@@ -12,7 +12,7 @@ const driverSchema = new mongoose.Schema(
         nationality: String,
         imageUrl: String,
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
@@ -20,4 +20,6 @@ const driverSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model('Driver', driverSchema);
+const DriverModel = model('Driver', driverSchema);
+
+export { DriverModel };
