@@ -1,6 +1,6 @@
-import path from 'path';
-import fs from 'fs';
-import bcrypt from 'bcryptjs';
+import { join } from 'path';
+import { unlink } from 'fs';
+import { compare, hash } from 'bcryptjs';
 import { UserModel } from '../models/user.mjs';
 import { DriverModel } from '../models/driver.mjs';
 import { checkDirname } from '../helpers/check-dirname.mjs';
@@ -12,13 +12,13 @@ export async function putUser(req, res) {
     try {
         if (req.body.newPassword && req.body.oldPassword) {
             const existedUser = await UserModel.findById(req.userId);
-            const isCorrectPassword = await bcrypt.compare(oldPassword, existedUser.password);
+            const isCorrectPassword = await compare(oldPassword, existedUser.password);
 
             if (!isCorrectPassword) {
                 return res.status(500).json({ error: 'Wrong password!' });
             }
 
-            hashedPassword = await bcrypt.hash(newPassword, 12);
+            hashedPassword = await hash(newPassword, 12);
         }
 
         await UserModel.updateOne(
@@ -57,8 +57,8 @@ export async function deleteUser(req, res) {
 
         deletedUser.drivers.forEach((driver) => {
             if (driver.imageUrl) {
-                const imagePath = path.join(checkDirname(import.meta.url), '..', driver.imageUrl);
-                fs.unlink(imagePath, (err) => err);
+                const imagePath = join(checkDirname(import.meta.url), '..', driver.imageUrl);
+                unlink(imagePath, (err) => err);
             }
         });
 

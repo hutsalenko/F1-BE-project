@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import path from 'path';
 import express from 'express';
-import mongoose from 'mongoose';
 import multer from 'multer';
+import { join } from 'path';
+import { connect } from 'mongoose';
 import { init } from './socket.mjs';
 import { checkDirname } from './helpers/check-dirname.mjs';
 import allowCors from './middleware/allow-cors.mjs';
@@ -36,7 +36,7 @@ import { postRoutes } from './routes/post.mjs';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
-app.use('/images', express.static(path.join(checkDirname(import.meta.url), 'images')));
+app.use('/images', express.static(join(checkDirname(import.meta.url), 'images')));
 app.use(allowCors);
 
 app.use(driversRoutes);
@@ -47,8 +47,7 @@ app.use(postRoutes);
 
 app.use(errorHandler);
 
-mongoose
-    .connect(process.env.MONGO_URL)
+connect(process.env.MONGO_URL)
     .then(() => {
         const server = app.listen(8080);
         const io = init(server);

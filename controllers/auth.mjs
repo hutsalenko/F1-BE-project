@@ -1,11 +1,11 @@
 import '../loggers.mjs';
-import winston from 'winston';
-import bcrypt from 'bcryptjs';
+import { loggers } from 'winston';
+import { compare, hash } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/user.mjs';
 
-const loginLogger = winston.loggers.get('Login');
-const errorLogger = winston.loggers.get('Error');
+const loginLogger = loggers.get('Login');
+const errorLogger = loggers.get('Error');
 
 export async function createUser(req, res) {
     const { email, firstName, lastName, password } = req.body;
@@ -17,7 +17,7 @@ export async function createUser(req, res) {
             return res.status(500).json({ error: 'User already exist' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const hashedPassword = await hash(password, 12);
 
         await UserModel.create({
             email,
@@ -43,7 +43,7 @@ export async function loginUser(req, res) {
             return res.status(500).json({ error: 'A user with this email could not be found.' });
         }
 
-        const isCorrectPassword = await bcrypt.compare(password, existedUser.password);
+        const isCorrectPassword = await compare(password, existedUser.password);
 
         if (!isCorrectPassword) {
             errorLogger.info('Login error', { email, error: 'Wrong password!' });

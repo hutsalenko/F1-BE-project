@@ -1,8 +1,8 @@
-import path from 'path';
+import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 export const checkDirname = (url) => {
     const __filename = fileURLToPath(url);
-    const __dirname = path.dirname(__filename);
+    const __dirname = dirname(__filename);
     return __dirname;
 };

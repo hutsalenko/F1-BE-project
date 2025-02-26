@@ -1,6 +1,6 @@
 import NodeCache from 'node-cache';
-import path from 'path';
-import fs from 'fs';
+import { join } from 'path';
+import { unlink } from 'fs';
 import { DriverModel } from '../models/driver.mjs';
 import { checkDirname } from '../helpers/check-dirname.mjs';
 
@@ -13,8 +13,8 @@ export async function putDriver(req, res) {
         const updatedDriver = await DriverModel.findById(req.params.driverId);
 
         if (updatedDriver.imageUrl) {
-            const imagePath = path.join(checkDirname(import.meta.url), '..', updatedDriver.imageUrl);
-            fs.unlink(imagePath, (err) => err);
+            const imagePath = join(checkDirname(import.meta.url), '..', updatedDriver.imageUrl);
+            unlink(imagePath, (err) => err);
         }
 
         await DriverModel.updateOne({ _id: req.params.driverId }, { imageUrl: image.path });
@@ -30,8 +30,8 @@ export async function deleteDriver(req, res) {
         const deletedDriver = await DriverModel.findOneAndDelete({ driverId: req.params.driverId });
 
         if (deletedDriver.imageUrl) {
-            const imagePath = path.join(checkDirname(import.meta.url), '..', deletedDriver.imageUrl);
-            fs.unlink(imagePath, (err) => err);
+            const imagePath = join(checkDirname(import.meta.url), '..', deletedDriver.imageUrl);
+            unlink(imagePath, (err) => err);
         }
 
         res.status(200).json({ message: 'Successfully deleted!' });
