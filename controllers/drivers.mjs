@@ -55,8 +55,8 @@ export async function postDrivers(req, res) {
     }
 }
 
+//Add Destructuring!!!
 //Add maximum amount of requests
-//How to write log
 //Work with create file and how to add information there
 //Library 'limiter' for request and 'hpp' for poluation,'helmet' for headers
 
