@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getPosts, createPost, updatePost, deletePost } from '../controllers/post.mjs';
-import isAuth from '../middleware/is-auth.mjs';
+import { isAuth } from '../middleware/is-auth.mjs';
 
 const router = Router();
 

@@ -5,8 +5,8 @@ import { join } from 'path';
 import { connect } from 'mongoose';
 import { init } from './socket.mjs';
 import { checkDirname } from './helpers/check-dirname.mjs';
-import allowCors from './middleware/allow-cors.mjs';
-import errorHandler from './middleware/allow-cors.mjs';
+import { allowCors } from './middleware/allow-cors.mjs';
+import { errorHandler } from './middleware/error-handler.mjs';
 
 const app = express();
 

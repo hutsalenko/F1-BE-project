@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getUser, putUser, deleteUser } from '../controllers/user.mjs';
-import isAuth from '../middleware/is-auth.mjs';
+import { isAuth } from '../middleware/is-auth.mjs';
 
 const router = Router();
 

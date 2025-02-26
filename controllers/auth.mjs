@@ -1,7 +1,7 @@
 import '../loggers.mjs';
+import jwt from 'jsonwebtoken';
 import { loggers } from 'winston';
 import { compare, hash } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/user.mjs';
 
 const loginLogger = loggers.get('Login');

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Base64 } from 'js-base64';
 
-export default (req, res, next) => {
+export const isAuth = (req, res, next) => {
     const authHeader = req.get('Authorization');
     if (!authHeader) {
         return res.status(401).json({ error: 'Not authenticated.' });
