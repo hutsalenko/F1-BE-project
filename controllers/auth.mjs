@@ -1,4 +1,4 @@
-import '../loggers.js';
+import '../loggers.mjs';
 import winston from 'winston';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
