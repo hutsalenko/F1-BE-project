@@ -55,9 +55,8 @@ export async function postDrivers(req, res) {
     }
 }
 
-//Add maximum amount of requests
 //Work with create file and how to add information there
-//Library 'limiter' for request and 'hpp' for poluation,'helmet' for headers
+//Library 'hpp' for poluation,'helmet' for headers
 
 // // Pagination
 // const page = parseInt(req.query.page) || 1;
