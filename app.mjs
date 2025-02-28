@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import multer from 'multer';
+import helmet from 'helmet';
 import { join } from 'path';
 import { connect } from 'mongoose';
 import { init } from './socket.mjs';
@@ -33,6 +34,7 @@ import { userRoutes } from './routes/user.mjs';
 import { authRoutes } from './routes/auth.mjs';
 import { postRoutes } from './routes/post.mjs';
 
+app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
