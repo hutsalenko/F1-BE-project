@@ -55,9 +55,6 @@ export async function postDrivers(req, res) {
     }
 }
 
-//Work with create file and how to add information there
-//Library 'hpp' for poluation
-
 // // Pagination
 // const page = parseInt(req.query.page) || 1;
 // const limit = parseInt(req.query.limit) || 10;
